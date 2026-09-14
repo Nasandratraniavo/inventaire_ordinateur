@@ -1,0 +1,16 @@
+{
+    "serial_number": "NXEJEEA002536099C53400",
+    "brand": "Acer",
+    "model": "Extensa 215-57-TCO",
+    "cpu": "13th Gen Intel(R) Core(TM) i3-1315U",
+    "gpu": [
+        "Intel(R) UHD Graphics"
+    ],
+    "ram_gb": 8.0,
+    "storage": [
+        {
+            "type": "SSD",
+            "capacity_gb": 256.0
+        }
+    ]
+}

@@ -1,6 +1,9 @@
 import gspread
 from google.oauth2.service_account import Credentials
 from gspread.utils import rowcol_to_a1
+import os
+import json
+import base64
 
 
 # 1. Autorisations nécessaires
@@ -10,10 +13,25 @@ SCOPES = [
 
 
 # 2. Charger les credentials
-credentials = Credentials.from_service_account_file(
-    "credentials.json",
-    scopes=SCOPES
-)
+credentials_base64 = os.getenv("GOOGLE_CREDENTIALS")
+
+if credentials_base64:
+    # Cas Render
+    credentials_info = json.loads(
+        base64.b64decode(credentials_base64).decode("utf-8")
+    )
+
+    credentials = Credentials.from_service_account_info(
+        credentials_info,
+        scopes=SCOPES
+    )
+
+else:
+    # Cas local
+    credentials = Credentials.from_service_account_file(
+        "credentials.json",
+        scopes=SCOPES
+    )
 
 
 # 3. Authentification auprès de Google

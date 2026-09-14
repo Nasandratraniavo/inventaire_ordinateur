@@ -1,12 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
 from typing import List
 from google_sheets import add_computer
+import os
 
 app = FastAPI()
 
 class Storage(BaseModel):
     type: str
+    interface: str
     capacity_gb: float
 
 class Computer(BaseModel):
@@ -26,7 +28,24 @@ def home():
 
 
 @app.post("/api/computers")
-def receive_computer(computer: Computer):
+def receive_computer(
+    computer: Computer,
+    x_api_key: str | None = Header(default=None)
+):
+
+    api_key = os.getenv("API_KEY")
+
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="API_KEY non configurée sur le serveur"
+        )
+
+    if x_api_key != api_key:
+        raise HTTPException(
+            status_code=401,
+            detail="Clé API invalide"
+        )
 
     add_computer(computer)
 

@@ -50,7 +50,11 @@ def add_computer(computer):
 
     gpu = ", ".join(computer.gpu) if computer.gpu else ""
 
-    disktype = computer.storage[0].type
+    disktype = ", ".join(
+        f"{disk.type} {disk.interface}"
+        for disk in computer.storage
+    )
+    
     diskcapacity = computer.storage[0].capacity_gb
 
     # Lire les en-têtes de la ligne 4
@@ -77,9 +81,6 @@ def add_computer(computer):
         if header in headers:
             column_index = headers.index(header)
             row[column_index] = value
-
-    # Ajouter la nouvelle ligne
-    # worksheet.append_row(row)
 
     # ---------------------------------------
     # Chercher la prochaine ligne disponible

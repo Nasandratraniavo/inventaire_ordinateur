@@ -136,7 +136,7 @@ def get_storage():
 
     command = """
     Get-PhysicalDisk |
-    Select-Object FriendlyName, MediaType, Size |
+    Select-Object FriendlyName, MediaType, BusType, Size |
     ConvertTo-Json
     """
 
@@ -166,6 +166,7 @@ def get_storage():
 
             storage_list.append({
                 "type": disk.get("MediaType", "Unknown"),
+                "interface": disk.get("BusType", "Unknown"),
                 "capacity_gb": size_gb
             })
 

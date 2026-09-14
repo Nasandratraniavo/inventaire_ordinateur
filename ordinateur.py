@@ -79,8 +79,7 @@ def main():
     else:
         print(f"✗ Le serveur a retourné le code {response.status_code}.")
 
-    print()
-    input("Appuyez sur Entrée pour fermer...")
+    print("Vous pouvez fermer cette fenêtre !!!")
 
 
 if __name__ == "__main__":

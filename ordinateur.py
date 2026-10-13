@@ -5,6 +5,7 @@ from hardware import get_all_specifications
 
 
 API_URL = "https://inventaire-ordinateur.onrender.com/api/computers"
+# API_URL = "http://127.0.0.1:8000/api/computers"
 
 API_KEY = os.getenv("API_KEY")
 
@@ -27,7 +28,7 @@ def main():
     try:
         specifications = get_all_specifications()
 
-        print("✓ Informations collectées")
+        print("Informations collectées")
         print()
 
     except Exception as e:
@@ -51,33 +52,47 @@ def main():
         )
 
     except requests.exceptions.Timeout:
-        print("✗ Le serveur ne répond pas.")
+        print("Le serveur ne répond pas.")
         print("Vérifiez votre connexion Internet et réessayez.")
         return
 
     except requests.exceptions.ConnectionError:
-        print("✗ Impossible de contacter le serveur.")
+        print("Impossible de contacter le serveur.")
         print("Vérifiez votre connexion Internet.")
         return
 
     except requests.exceptions.RequestException as e:
-        print("✗ Une erreur réseau est survenue.")
+        print("Une erreur réseau est survenue.")
         print(f"Détail : {e}")
         return
 
     # Analyse de la réponse du serveur
     if response.status_code == 200:
-        print("✓ Inventaire envoyé avec succès.")
+        print("Inventaire envoyé avec succès.")
+
+    elif response.status_code == 409:
+        try:
+            message = response.json().get(
+                "detail",
+                "Cet ordinateur existe déjà."
+            )
+        except ValueError:
+            message = "Cet ordinateur existe déjà."
+
+        print(f"{message}")
+
+    elif response.status_code == 400:
+        print("Numéro de série manquant ou invalide.")
 
     elif response.status_code == 401:
-        print("✗ Clé API invalide.")
+        print("Clé API invalide.")
 
     elif response.status_code >= 500:
-        print("✗ Erreur du serveur.")
+        print("Erreur du serveur.")
         print("Veuillez réessayer plus tard.")
 
     else:
-        print(f"✗ Le serveur a retourné le code {response.status_code}.")
+        print(f"Le serveur a retourné le code {response.status_code}.")
 
     print("Vous pouvez fermer cette fenêtre !!!")
 

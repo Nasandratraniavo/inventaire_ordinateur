@@ -47,7 +47,25 @@ def receive_computer(
             detail="Clé API invalide"
         )
 
-    add_computer(computer)
+    resultat = add_computer(computer)
+
+    if resultat == "duplicate":
+        raise HTTPException(
+            status_code=409,
+            detail=f"Le numéro de série {computer.serial_number} existe déjà."
+        )
+
+    elif resultat == "missing_serial":
+        raise HTTPException(
+            status_code=400,
+            detail="Le numéro de série est manquant."
+        )
+
+    elif resultat != "success":
+        raise HTTPException(
+            status_code=500,
+            detail="Impossible d'enregistrer l'ordinateur."
+        )
 
     return {
         "status": "success",
